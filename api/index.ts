@@ -1,16 +1,18 @@
-import express from 'express';
+import * as dotenv from "dotenv";
+dotenv.config();
+// Require the framework
 
-const app = express()
+import Fastify from "fastify";
 
-app.get('/api', (req, res) => {
-  res.setHeader('Content-Type', 'text/html');
-  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
-  res.end(`Hello! native api`);
+// Instantiate Fastify with some config
+const app = Fastify({
+  logger: true,
 });
 
-app.get('/api/item/:slug', (req, res) => {
-  const { slug } = req.params;
-  res.json({ item: `item with slug ${slug}` });
-});
+// Register your application as a normal plugin.
+app.register(import("../src/app"));
 
-module.exports = app
+export default async (req, res) => {
+    await app.ready();
+    app.server.emit('request', req, res);
+}
