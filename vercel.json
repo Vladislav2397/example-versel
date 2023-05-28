@@ -3,6 +3,6 @@
         {
             "source": "/(.*)",
         }
-      "destination": "/api/hello.ts"
+      "destination": "/src/app.js"
     ]
 }
